@@ -1,0 +1,29 @@
+{
+  "projectName": "app",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "bun",
+  "includeExamples": true,
+  "tailwind": true,
+  "addOnOptions": {
+    "drizzle": {
+      "database": "postgresql"
+    }
+  },
+  "envVarValues": {
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_dG9nZXRoZXItYmx1ZWpheS0zOS5jbGVyay5hY2NvdW50cy5kZXYk"
+  },
+  "git": false,
+  "install": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "eslint",
+    "drizzle",
+    "form",
+    "shadcn",
+    "tanstack-query",
+    "clerk"
+  ]
+}
