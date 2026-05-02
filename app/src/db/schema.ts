@@ -7,7 +7,7 @@ import {
   doublePrecision,
 } from 'drizzle-orm/pg-core'
 
-export const todos = pgTable('users', {
+export const usersTable = pgTable('users', {
   id: uuid().defaultRandom().primaryKey(),
   clerkId: varchar('clerk_id', { length: 255 }).notNull(),
   username: varchar({ length: 15 }),
