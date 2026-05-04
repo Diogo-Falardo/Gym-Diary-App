@@ -14,4 +14,18 @@ export const userSchema = z.object({
   weight: z.number().optional().nullable(),
   createdAt: z.date(),
 })
+
+export const userPatchSchema = userSchema.pick({
+  username: true,
+  dateOfBirth: true,
+  height: true,
+  weight: true,
+})
+
+export const userPublicSchema = userPatchSchema.extend({
+  id: z.uuid(),
+})
+
 export type typeUserSchema = z.infer<typeof userSchema>
+export type typeUserPatchSchema = z.infer<typeof userPatchSchema>
+export type typeUserPublicSchema = z.infer<typeof userPublicSchema>

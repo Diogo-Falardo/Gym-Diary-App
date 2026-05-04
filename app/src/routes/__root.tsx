@@ -13,6 +13,7 @@ import ClerkProvider from '../integrations/clerk/provider'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { ThemeProvider } from '#/components/theme/theme-provider'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -53,7 +54,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ClerkProvider>
-          {children}
+          <ThemeProvider defaultTheme="dark" storageKey="theme">
+            {children}
+          </ThemeProvider>
           <TanStackDevtools
             config={{
               position: 'bottom-right',
