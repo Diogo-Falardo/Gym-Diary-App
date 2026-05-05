@@ -15,6 +15,9 @@ import { useServerFn } from '@tanstack/react-start'
 import { sfCreateNewWorkout } from '#/server/workouts/workout.function'
 import { toast } from 'sonner'
 import { createWorkoutSchema } from '#/server/workouts/workout.schema'
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '../ui/empty'
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const WorkoutPanel = ({ userId }: { userId: string }) => {
   const {
@@ -40,11 +43,33 @@ export const WorkoutPanel = ({ userId }: { userId: string }) => {
       <div className="flex justify-end">
         <WorkoutCreate userId={userId} />
       </div>
+      <div className="flex flex-col items-center justify-center">
+        {currentUserWorkouts && currentUserWorkouts.length > 0 ? (
+          <div className="w-full p-2 flex flex-col gap-5">
+            {currentUserWorkouts.map((w) => (
+              <Card key={w.id} className=" w-full">
+                <CardHeader>
+                  <CardTitle>{w.name}</CardTitle>
+                  <CardDescription>{w.createdAt.toString()}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Empty>
+            <EmptyHeader>
+              <EmptyTitle>No Workouts</EmptyTitle>
+              <EmptyDescription>Create your first workout</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+      </div>
     </div>
   )
 }
 
 const WorkoutCreate = ({ userId }: { userId: string }) => {
+  const queryClient = useQueryClient()
   const createWorkout = useServerFn(sfCreateNewWorkout)
 
   const createWorkoutForm = useForm({
@@ -58,6 +83,7 @@ const WorkoutCreate = ({ userId }: { userId: string }) => {
       console.log(value, 'workout create form submit')
       try {
         await createWorkout({ data: { userId, name: value.name } })
+        queryClient.invalidateQueries({ queryKey: ['workouts', userId] })
         toast.success(`new workout created: ${value.name}`)
       } catch (err: any) {
         console.error(err, 'error while creating workout')

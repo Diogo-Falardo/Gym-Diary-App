@@ -15,8 +15,10 @@ import { useSfFetchUserInfoByUserId } from '#/lib/hooks/user.hooks'
 import { useServerFn } from '@tanstack/react-start'
 import { sfUpdateUserProfile } from '#/server/users/user.function'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const ProfileUpdater = ({ userId }: { userId: string }) => {
+  const queryClient = useQueryClient()
   const [date, setDate] = useState<Date>()
   const {
     data: userInfo,
@@ -45,6 +47,7 @@ export const ProfileUpdater = ({ userId }: { userId: string }) => {
           data: { userId, profile: value },
         })
         toast.success('profile updated')
+        queryClient.invalidateQueries({ queryKey: ['user', userId] })
       } catch (err: any) {
         console.error(err)
         toast.error(err.message)
