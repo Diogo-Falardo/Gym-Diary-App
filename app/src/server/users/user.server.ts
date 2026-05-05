@@ -115,8 +115,10 @@ class UserServer {
     }
 
     if (Object.keys(newUserData).length === 0) {
+      log.withMetadata({ newUserData }).warn('no changes or no values provided')
       throw new Error('Nothing to update!')
     }
+
     try {
       await db
         .update(usersTable)

@@ -4,7 +4,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDownIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import {
@@ -14,13 +14,7 @@ import {
 import { useSfFetchUserInfoByUserId } from '#/lib/hooks/user.hooks'
 import { useServerFn } from '@tanstack/react-start'
 import { sfUpdateUserProfile } from '#/server/users/user.function'
-
-const defaultProfile: typeUserPatchSchema = {
-  username: '',
-  dateOfBirth: '',
-  height: 0,
-  weight: 0,
-}
+import { toast } from 'sonner'
 
 export const ProfileUpdater = ({ userId }: { userId: string }) => {
   const [date, setDate] = useState<Date>()
@@ -31,6 +25,13 @@ export const ProfileUpdater = ({ userId }: { userId: string }) => {
   } = useSfFetchUserInfoByUserId({ userId })
 
   const updateProfile = useServerFn(sfUpdateUserProfile)
+
+  const defaultProfile: typeUserPatchSchema = {
+    username: userInfo?.username || '',
+    dateOfBirth: userInfo?.dateOfBirth || '',
+    height: userInfo?.height || 0,
+    weight: userInfo?.weight || 0,
+  }
 
   const profileUpdateForm = useForm({
     defaultValues: defaultProfile,
@@ -43,28 +44,13 @@ export const ProfileUpdater = ({ userId }: { userId: string }) => {
         await updateProfile({
           data: { userId, profile: value },
         })
-        console.log('profile updated')
+        toast.success('profile updated')
       } catch (err: any) {
         console.error(err)
+        toast.error(err.message)
       }
     },
   })
-
-  useEffect(() => {
-    if (userInfo) {
-      profileUpdateForm.reset({
-        username: userInfo.username ?? '',
-        dateOfBirth: userInfo.dateOfBirth ?? '',
-        height: userInfo.height ?? 0,
-        weight: userInfo.weight ?? 0,
-      })
-      // Optionally set the date picker as well
-      if (userInfo.dateOfBirth) {
-        setDate(new Date(userInfo.dateOfBirth))
-      }
-    }
-    // Only run when userInfo is updated
-  }, [userInfo])
 
   if (isLoading) {
     return <div>Loading user....</div>
@@ -129,7 +115,11 @@ export const ProfileUpdater = ({ userId }: { userId: string }) => {
                       data-empty={!date}
                       className="w-53 justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
                     >
-                      {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                      {date ? (
+                        format(date, 'PPP')
+                      ) : (
+                        <span>{userInfo.dateOfBirth ?? 'Pick a date'}</span>
+                      )}
                       <ChevronDownIcon />
                     </Button>
                   </PopoverTrigger>
