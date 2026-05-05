@@ -8,6 +8,7 @@ import { sfIndexUser } from '#/server/users/user.function'
 import { ModeToggle } from '#/components/theme/mode-toogle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
 import { ProfileUpdater } from '#/components/profile/profile-updater'
+import { WorkoutPanel } from '#/components/workouts/workout-panel'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -47,7 +48,9 @@ function App() {
             <TabsTrigger value="diary">Diary</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
-          <TabsContent value="diary"></TabsContent>
+          <TabsContent value="diary">
+            <WorkoutPanel userId={internalUserId} />
+          </TabsContent>
           <TabsContent value="profile" className="">
             <ProfileUpdater userId={internalUserId} />
           </TabsContent>

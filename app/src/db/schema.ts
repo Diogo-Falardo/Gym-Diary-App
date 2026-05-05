@@ -5,6 +5,7 @@ import {
   varchar,
   date,
   doublePrecision,
+  integer,
 } from 'drizzle-orm/pg-core'
 
 export const usersTable = pgTable('users', {
@@ -15,4 +16,32 @@ export const usersTable = pgTable('users', {
   height: doublePrecision('height'), // in centimeters
   weight: doublePrecision('weight'), // in kilograms
   createdAt: timestamp('created_at').defaultNow(),
+})
+
+export const workoutsTable = pgTable('workouts', {
+  id: uuid().defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => usersTable.id),
+  name: varchar({ length: 64 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+export const workoutsExercises = pgTable('workouts_exercises', {
+  id: uuid().defaultRandom().primaryKey(),
+  workoutId: uuid('workout_id')
+    .notNull()
+    .references(() => workoutsTable.id),
+  name: varchar({ length: 64 }),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+export const exercisesPerformance = pgTable('exercises_perfomance', {
+  id: uuid().defaultRandom().primaryKey(),
+  exerciseId: uuid('exercise_id')
+    .notNull()
+    .references(() => workoutsExercises.id),
+  setNumber: integer('set_number').notNull(),
+  reps: integer(),
+  weight: doublePrecision(),
 })

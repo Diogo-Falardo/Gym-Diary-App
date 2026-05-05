@@ -8,6 +8,20 @@
       "when": 1777723475399,
       "tag": "0000_tiny_micromacro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777989102890,
+      "tag": "0001_unknown_red_shift",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777994902957,
+      "tag": "0002_fixed_chamber",
+      "breakpoints": true
     }
   ]
 }
