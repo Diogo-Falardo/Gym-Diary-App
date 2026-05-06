@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { useServerFn } from '@tanstack/react-start'
 import { sfCreateNewExercise } from '#/server/workouts/workout.function'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const AddExercise = ({
   userId,
@@ -14,6 +15,7 @@ export const AddExercise = ({
   userId: string
   workoutId: string
 }) => {
+  const useQuery = useQueryClient()
   const addExercise = useServerFn(sfCreateNewExercise)
 
   const addExerciseForm = useForm({
@@ -27,6 +29,7 @@ export const AddExercise = ({
       try {
         await addExercise({ data: { userId, workoutId, name: value.name } })
         toast.success('new exercise added: ' + value.name)
+        useQuery.invalidateQueries({ queryKey: ['workout', userId, workoutId] })
       } catch (err: any) {
         console.error(err)
         toast.error(err.message)

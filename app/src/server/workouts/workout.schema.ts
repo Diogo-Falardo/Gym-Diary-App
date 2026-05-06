@@ -44,11 +44,10 @@ export const workoutExercisesPerformanceSchema = z.object({
   weight: z.number().optional().nullable(),
 })
 
-export const createWorkoutExercisePerformanceSchema =
-  workoutExercisesPerformanceSchema.pick({
-    reps: true,
-    weight: true,
-  })
+export const createWorkoutExerciseSetSchema = z.object({
+  reps: z.number(),
+  weight: z.number(),
+})
 
 export type typeWorkoutExercisePerformanceSchema = z.infer<
   typeof workoutExercisesPerformanceSchema

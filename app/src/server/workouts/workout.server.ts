@@ -229,3 +229,18 @@ export async function createNewExercise(
 
   return await workoutExerciseService.createExercise(workoutId, name)
 }
+
+/**
+ * Create a new set inside an exercise
+ */
+export async function createNewSet(
+  exerciseId: string,
+  reps: number,
+  weight: number,
+) {
+  return await workoutExercisePerfomanceService.createSet(
+    exerciseId,
+    reps,
+    weight,
+  )
+}

@@ -36,7 +36,7 @@ export const workoutsExercisesTable = pgTable('workouts_exercises', {
   createdAt: timestamp('created_at').defaultNow(),
 })
 
-export const exercisesPerformanceTable = pgTable('exercises_perfomance', {
+export const exercisesPerformanceTable = pgTable('exercises_performance', {
   id: uuid().defaultRandom().primaryKey(),
   exerciseId: uuid('exercise_id')
     .notNull()

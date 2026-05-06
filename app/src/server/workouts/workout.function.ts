@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import {
   createNewExercise,
+  createNewSet,
   createNewWorkout,
   fullWorkoutInfo,
   getAllTheWorkoutsFromInternalUserId,
@@ -36,4 +37,14 @@ export const sfCreateNewExercise = createServerFn({
   )
   .handler(async ({ data }) => {
     return await createNewExercise(data.userId, data.workoutId, data.name)
+  })
+
+export const sfCreateNewSet = createServerFn({
+  method: 'POST',
+})
+  .inputValidator(
+    (data: { exerciseId: string; reps: number; weight: number }) => data,
+  )
+  .handler(async ({ data }) => {
+    return await createNewSet(data.exerciseId, data.reps, data.weight)
   })
