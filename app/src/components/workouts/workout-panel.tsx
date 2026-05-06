@@ -18,8 +18,10 @@ import { createWorkoutSchema } from '#/server/workouts/workout.schema'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '../ui/empty'
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 
 export const WorkoutPanel = ({ userId }: { userId: string }) => {
+  const navigate = useNavigate()
   const {
     data: currentUserWorkouts,
     isLoading,
@@ -34,10 +36,6 @@ export const WorkoutPanel = ({ userId }: { userId: string }) => {
     return <div>Error workouts....</div>
   }
 
-  if (currentUserWorkouts) {
-    console.log(currentUserWorkouts)
-  }
-
   return (
     <div className="flex flex-col ">
       <div className="flex justify-end">
@@ -47,7 +45,11 @@ export const WorkoutPanel = ({ userId }: { userId: string }) => {
         {currentUserWorkouts && currentUserWorkouts.length > 0 ? (
           <div className="w-full p-2 flex flex-col gap-5">
             {currentUserWorkouts.map((w) => (
-              <Card key={w.id} className=" w-full">
+              <Card
+                key={w.id}
+                className="w-full"
+                onClick={() => navigate({ to: `/workouts/${userId}/${w.id}` })}
+              >
                 <CardHeader>
                   <CardTitle>{w.name}</CardTitle>
                   <CardDescription>{w.createdAt.toString()}</CardDescription>

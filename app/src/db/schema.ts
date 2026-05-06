@@ -27,7 +27,7 @@ export const workoutsTable = pgTable('workouts', {
   createdAt: timestamp('created_at').defaultNow(),
 })
 
-export const workoutsExercises = pgTable('workouts_exercises', {
+export const workoutsExercisesTable = pgTable('workouts_exercises', {
   id: uuid().defaultRandom().primaryKey(),
   workoutId: uuid('workout_id')
     .notNull()
@@ -36,11 +36,11 @@ export const workoutsExercises = pgTable('workouts_exercises', {
   createdAt: timestamp('created_at').defaultNow(),
 })
 
-export const exercisesPerformance = pgTable('exercises_perfomance', {
+export const exercisesPerformanceTable = pgTable('exercises_perfomance', {
   id: uuid().defaultRandom().primaryKey(),
   exerciseId: uuid('exercise_id')
     .notNull()
-    .references(() => workoutsExercises.id),
+    .references(() => workoutsExercisesTable.id),
   setNumber: integer('set_number').notNull(),
   reps: integer(),
   weight: doublePrecision(),
