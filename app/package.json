@@ -20,7 +20,6 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.61.3",
     "@fontsource-variable/inter": "^5.2.8",
     "@loglayer/transport-simple-pretty-terminal": "^3.0.2",
     "@tailwindcss/vite": "^4.1.18",
