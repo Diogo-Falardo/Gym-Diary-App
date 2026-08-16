@@ -49,4 +49,5 @@ export async function generateWorkouts() {
   }
 }
 
+// generator.test.ts can work as a generator as well
 export const sfGenerateWorkouts = createServerFn({ method: "POST" }).handler(async () => await generateWorkouts())
