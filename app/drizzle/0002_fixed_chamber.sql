@@ -1,1 +1,0 @@
-ALTER TABLE "workouts" ALTER COLUMN "name" SET NOT NULL;
