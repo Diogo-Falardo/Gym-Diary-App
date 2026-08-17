@@ -1,7 +1,7 @@
 import { db } from "#/db"
-import { table_exercises, table_workoutExercises, table_workoutPerformance, table_workouts } from "#/db/schema";
-import { selectWorkoutSchema } from "#/db/schemas/workouts/workouts.schemas";
-import type { outputWorkout } from "#/db/schemas/workouts/workouts.types";
+import { table_exercises, table_workoutExercises, table_workoutExercisesPerformance, table_workoutPerformance, table_workouts } from "#/db/schema";
+import { outputWorkoutPerformanceSchema, outputWorkoutPerformanceSetSchema, selectWorkoutSchema } from "#/db/schemas/workouts/workouts.schemas";
+import type { outputWorkout, outputWorkoutPerformance, outputWorkoutPerformanceExercise, outputWorkoutPerformanceSet } from "#/db/schemas/workouts/workouts.types";
 import { log } from "#/middlewares/logger";
 import { addDays, startOfDay } from "date-fns";
 import { and, eq, gte, lt } from "drizzle-orm";
@@ -53,7 +53,34 @@ class Workouts {
       throw new Error("Workout not saved! Internal server error")
     }
   }
+
+  static async getWorkoutPerformance(workoutPerformanceId: string): Promise<{ id: string, workoutId: string, date: Date }> {
+    try {
+      const [performance] = await db.select().from(table_workoutPerformance).where(eq(table_workoutPerformance.id, workoutPerformanceId))
+      if (!performance) {
+        throw new Error("Workout not found")
+      }
+
+      return performance
+    } catch (error) {
+      log.withError(error).withMetadata({ workoutPerformanceId }).error("Workouts.getWorkoutPerformance")
+      throw new Error("Internal server error")
+    }
+  }
+
+  static async getWorkoutExercisePerformance(workoutPerformanceId: string, exerciseId: string): Promise<Array<outputWorkoutPerformanceSet>> {
+    try {
+      const exercisePerformance = await db.select().from(table_workoutExercisesPerformance).where(and(eq(table_workoutExercisesPerformance.workoutPerformanceId, workoutPerformanceId), eq(table_workoutExercisesPerformance.exerciseId, exerciseId)))
+
+      return outputWorkoutPerformanceSetSchema.array().parse(exercisePerformance)
+    } catch (error) {
+      log.withError(error).withMetadata({ workoutPerformanceId, exerciseId }).error("Workouts.getWorkoutExercisePerformance")
+      throw new Error("Internal server error")
+    }
+
+  }
 }
+
 
 export async function getWorkouts(): Promise<Array<outputWorkout>> {
   let workouts = await db.select().from(table_workouts)
@@ -74,7 +101,7 @@ export async function getWorkouts(): Promise<Array<outputWorkout>> {
 }
 
 /*
- * this funtion will be limited to one workout per day
+ * limited to one workout per day
  * @return workoutPerformance Id
  **/
 export async function saveWorkout(workoutId: string): Promise<string> {
@@ -92,3 +119,27 @@ export async function saveWorkout(workoutId: string): Promise<string> {
   return performanceId
 }
 
+/**
+ *  
+ * */
+export async function getWorkoutPerformamance(workoutPerformanceId: string): Promise<outputWorkoutPerformance> {
+
+  const workoutPerformance = await Workouts.getWorkoutPerformance(workoutPerformanceId)
+
+  const loadWorkoutExercices = await Workouts.exercices(workoutPerformance.workoutId)
+
+  let exercicesPerformance: Array<outputWorkoutPerformanceExercise> = []
+  for (const exercise of loadWorkoutExercices) {
+    exercicesPerformance.push({
+      ...exercise,
+      sets: await Workouts.getWorkoutExercisePerformance(workoutPerformanceId, exercise.exerciseId)
+    })
+  }
+
+  return outputWorkoutPerformanceSchema.parse({
+    id: workoutPerformance.id,
+    date: workoutPerformance.date,
+    exercises: exercicesPerformance
+  })
+
+}

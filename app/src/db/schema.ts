@@ -39,7 +39,7 @@ export const table_workoutExercisesPerformance = pgTable('workout_exercises_perf
   workoutPerformanceId: uuid("workout_performance_id").notNull().references(() => table_workoutPerformance.id),
   exerciseId: uuid('exercise_id')
     .notNull()
-    .references(() => table_workoutExercises.id),
+    .references(() => table_exercises.id),
   setNumber: integer('set_number').notNull(),
   reps: integer(),
   weight: doublePrecision(),

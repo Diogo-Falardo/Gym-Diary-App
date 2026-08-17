@@ -15,8 +15,8 @@ export const saveWorkoutInputSchema = insertWorkoutPerformanceSchema.pick({
   workoutId: true,
 })
 
-export const selectWorkoutExercisePermormanceSchema = createSelectSchema(table_workoutExercisesPerformance)
-export const insertWorkoutExercisePermormanceSchema = createInsertSchema(table_workoutExercisesPerformance)
+export const selectWorkoutExercisePerformanceSchema = createSelectSchema(table_workoutExercisesPerformance)
+export const insertWorkoutExercisePerformanceSchema = createInsertSchema(table_workoutExercisesPerformance)
 
 export const outputWorkout = selectWorkoutSchema.extend({
   exercises: selectWorkoutExerciseSchema.pick({
@@ -24,4 +24,29 @@ export const outputWorkout = selectWorkoutSchema.extend({
   }).extend({
     name: z.string()
   }).array()
+})
+
+
+export const outputWorkoutPerformanceSetSchema = selectWorkoutExercisePerformanceSchema.pick({
+  id: true,
+  setNumber: true,
+  reps: true,
+  weight: true,
+})
+
+export const outputWorkoutPerformanceExerciseSchema = z.object({
+  exerciseId: z.uuid(),
+  name: z.string(),
+  sets: outputWorkoutPerformanceSetSchema.array(),
+})
+
+export const outputWorkoutPerformanceSchema = selectWorkoutPerformanceSchema.pick({
+  id: true,
+  date: true,
+}).extend({
+  exercises: outputWorkoutPerformanceExerciseSchema.array(),
+})
+
+export const getWorkoutPerformanceSchema = selectWorkoutPerformanceSchema.pick({
+  id: true
 })
