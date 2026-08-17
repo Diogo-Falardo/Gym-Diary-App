@@ -11,6 +11,10 @@ export const insertWorkoutExerciseSchema = createInsertSchema(table_workoutExerc
 export const selectWorkoutPerformanceSchema = createSelectSchema(table_workoutPerformance)
 export const insertWorkoutPerformanceSchema = createInsertSchema(table_workoutPerformance)
 
+export const saveWorkoutInputSchema = insertWorkoutPerformanceSchema.pick({
+  workoutId: true,
+})
+
 export const selectWorkoutExercisePermormanceSchema = createSelectSchema(table_workoutExercisesPerformance)
 export const insertWorkoutExercisePermormanceSchema = createInsertSchema(table_workoutExercisesPerformance)
 

@@ -1,4 +1,4 @@
-import { sfGetExercices } from "#/server/exercices/exercises.functions";
+import { sfGetExercices } from "#/server/exercises/exercises.functions";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const useGetExercicesOptions = () =>

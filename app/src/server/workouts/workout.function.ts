@@ -1,4 +1,10 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getWorkouts } from "./workout.server";
+import { saveWorkoutInputSchema } from "#/db/schemas/workouts/workouts.schemas"
+import { createServerFn } from "@tanstack/react-start"
+import { getWorkouts, saveWorkout } from "./workout.server"
 
 export const sfGetWorkouts = createServerFn({ method: "GET" }).handler(async () => await getWorkouts())
+
+export const sfSaveWorkout = createServerFn({ method: "POST" })
+  .inputValidator(saveWorkoutInputSchema)
+  .handler(async ({ data }) => saveWorkout(data.workoutId))
+
